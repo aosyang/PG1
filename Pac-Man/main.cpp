@@ -7,6 +7,8 @@ using namespace System;
 
 #include "globals.h"
 
+#include "Player.h"
+
 // Reset the console's cursor to bottom of screen.
 void ResetCursor()
 {
@@ -71,6 +73,10 @@ int main()
 	// NOTE: Commenting-out the seeding of random can make it easier to test your code
 
 	// TODO Part 1: Name entry
+	char playerName[1024];
+	cout << "Please enter your name: ";
+	cin.getline(playerName, sizeof(playerName));
+	Console::SetCursorPosition(0, 0);
 
 	char maze[MAZE_ROWS][MAZE_COLS] =
 	{
@@ -124,7 +130,7 @@ int main()
 	}
 
 #pragma region Example Code
-#if !0
+#if 0
 	/*****************************************************************/
 	/*****************************************************************/
 	// EXAMPLE CODE - None of this code belongs in the final game, so
@@ -182,12 +188,15 @@ int main()
 
 	// TODO Part 1: Create player
 	COORD playerStart = CreateCoord(27, 23);
+	Player* player = new Player(maze, playerStart, playerName);
 
 	// TODO Part 2: Create ghosts
 	COORD startPos[NUM_GHOSTS] = { { 27, 11 }, { 23, 14 }, { 27, 14 }, { 31, 14 } };
 	ConsoleColor startColor[NUM_GHOSTS] = { Red, Cyan, Magenta, DarkYellow };
 
 	// TODO Part 1: Display HUD and reset cursor
+	player->DisplayHUD();
+	ResetCursor();
 
 	// TODO Part 1: Game loop
 	// Inside game loop:
@@ -198,9 +207,44 @@ int main()
 	//	TODO Part 3: Check collision
 	//	TODO Part 3: Handle player death
 	//	TODO Part 1: Display HUD and reset cursor
+	while (true)
+	{
+		char letter = _getch();
+		if (cin.good())
+		{
+			if ('e' == letter)
+			{
+				break;
+			}
+
+			COORD coord;
+			coord.X = coord.Y = 0;
+
+			switch (letter)
+			{
+			case 'w':
+				coord.X = 0; coord.Y = -1;
+				break;
+			case 's':
+				coord.X = 0; coord.Y = 1;
+				break;
+			case 'a':
+				coord.X = -2; coord.Y = 0;
+				break;
+			case 'd':
+				coord.X = 2; coord.Y = 0;
+				break;
+			}
+
+			player->Move(maze, coord);
+			player->DisplayHUD();
+			ResetCursor();
+		}
+	}
 
 	// After game loop:
 	// TODO Part 1 & 2: Free memory
+	delete player;
 
 	Console::ResetColor();
 	ResetCursor();
