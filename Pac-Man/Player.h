@@ -2,8 +2,6 @@
 
 #include "globals.h"
 
-typedef char MazeType[MAZE_ROWS][MAZE_COLS];
-
 class Player
 {
 public:

@@ -19,6 +19,8 @@ inline bool CoordsEqual(const COORD &a, const COORD &b)
 #define MAZE_ROWS 31
 #define MAZE_COLS 55
 
+typedef char MazeType[MAZE_ROWS][MAZE_COLS];
+
 #define NUM_GHOSTS 4
 
 // Warp coordinates.

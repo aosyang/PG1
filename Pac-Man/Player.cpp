@@ -30,6 +30,21 @@ Player::~Player()
 void Player::Move(MazeType maze, COORD coord)
 {
 	COORD newCoord;
+
+	// Handle wrap
+	if (m_Coord.Y == 14)
+	{
+		if (m_Coord.X == 1 && coord.X == -2)
+		{
+			coord.X = 52;
+		}
+
+		if (m_Coord.X == 53 && coord.X == 2)
+		{
+			coord.X = -52;
+		}
+	}
+
 	newCoord.X = m_Coord.X + coord.X;
 	newCoord.Y = m_Coord.Y + coord.Y;
 

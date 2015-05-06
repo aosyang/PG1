@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #include <conio.h>
+#include <time.h>
 
 #include "Console.h"
 using namespace System;
@@ -8,6 +9,7 @@ using namespace System;
 #include "globals.h"
 
 #include "Player.h"
+#include "Ghost.h"
 
 // Reset the console's cursor to bottom of screen.
 void ResetCursor()
@@ -71,6 +73,7 @@ int main()
 
 	// TODO Part 2: Seed random
 	// NOTE: Commenting-out the seeding of random can make it easier to test your code
+	srand(time(NULL));
 
 	// TODO Part 1: Name entry
 	char playerName[1024];
@@ -193,6 +196,11 @@ int main()
 	// TODO Part 2: Create ghosts
 	COORD startPos[NUM_GHOSTS] = { { 27, 11 }, { 23, 14 }, { 27, 14 }, { 31, 14 } };
 	ConsoleColor startColor[NUM_GHOSTS] = { Red, Cyan, Magenta, DarkYellow };
+	Ghost* ghosts[NUM_GHOSTS] = { NULL };
+	for (int i = 0; i < NUM_GHOSTS; i++)
+	{
+		ghosts[i] = new Ghost(startColor[i], startPos[i]);
+	}
 
 	// TODO Part 1: Display HUD and reset cursor
 	player->DisplayHUD();
@@ -237,6 +245,10 @@ int main()
 			}
 
 			player->Move(maze, coord);
+			for (int i = 0; i < NUM_GHOSTS; i++)
+			{
+				ghosts[i]->Move(maze, ghosts);
+			}
 			player->DisplayHUD();
 			ResetCursor();
 		}
@@ -245,6 +257,10 @@ int main()
 	// After game loop:
 	// TODO Part 1 & 2: Free memory
 	delete player;
+	for (int i = 0; i < NUM_GHOSTS; i++)
+	{
+		delete ghosts[i];
+	}
 
 	Console::ResetColor();
 	ResetCursor();
