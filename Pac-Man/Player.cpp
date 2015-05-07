@@ -19,6 +19,9 @@ Player::Player(MazeType maze, COORD coord, char* name)
 	m_Score = 0;
 	m_Lives = 3;
 
+	m_HasPowerPellet = false;
+	m_PowerPelletFrames = 0;
+
 	Draw(maze);
 }
 
@@ -61,6 +64,8 @@ void Player::Move(MazeType maze, COORD coord)
 		return;
 	case MPP:
 		m_Score += 50;
+		m_HasPowerPellet = true;
+		m_PowerPelletFrames = 25;
 		break;
 	case MDOT:
 		m_Score += 10;
@@ -69,11 +74,28 @@ void Player::Move(MazeType maze, COORD coord)
 		break;
 	}
 
+	if (m_HasPowerPellet)
+	{
+		if (m_PowerPelletFrames == 0)
+		{
+			m_HasPowerPellet = false;
+		}
+		else
+			m_PowerPelletFrames--;
+	}
+
 	ClearSpot(maze);
 
 	m_Coord.X = newCoord.X;
 	m_Coord.Y = newCoord.Y;
 
+	Draw(maze);
+}
+
+void Player::Reset(MazeType maze, COORD coord)
+{
+	ClearSpot(maze);
+	m_Coord.X = coord.X; m_Coord.Y = coord.Y;
 	Draw(maze);
 }
 

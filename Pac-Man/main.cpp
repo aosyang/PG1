@@ -18,6 +18,27 @@ void ResetCursor()
 }
 
 // TODO Part 3: Check collision function
+bool CheckCollision(MazeType maze, Player* player, Ghost** ghosts)
+{
+	for (int i = 0; i < NUM_GHOSTS; i++)
+	{
+		if (CoordsEqual(player->GetPos(), ghosts[i]->GetPos()))
+		{
+			if (player->GetPowerPellet())
+			{
+				ghosts[i]->Kill(maze);
+				player->GhostKilled();
+			}
+			else
+			{
+				player->Kill();
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
 
 int main()
 {
@@ -70,6 +91,10 @@ int main()
 #pragma endregion
 
 	// TODO Part 2: Memory Leak Detection
+	// use this to enable mem leak detection
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	// use this function to break at a specific allocation
+	_CrtSetBreakAlloc(-1);
 
 	// TODO Part 2: Seed random
 	// NOTE: Commenting-out the seeding of random can make it easier to test your code
@@ -245,10 +270,43 @@ int main()
 			}
 
 			player->Move(maze, coord);
-			for (int i = 0; i < NUM_GHOSTS; i++)
+
+			bool playerKilled = CheckCollision(maze, player, ghosts);
+
+			if (!playerKilled)
 			{
-				ghosts[i]->Move(maze, ghosts);
+				for (int i = 0; i < NUM_GHOSTS; i++)
+				{
+					ghosts[i]->Move(maze, ghosts, player->GetPowerPellet());
+				}
+
+				playerKilled = CheckCollision(maze, player, ghosts);
 			}
+
+			if (playerKilled)
+			{
+				if (player->GetLives() > 0)
+				{
+					player->Reset(maze, playerStart);
+
+					for (int i = 0; i < NUM_GHOSTS; i++)
+					{
+						ghosts[i]->Reset(maze, startPos[i]);
+					}
+
+					for (int i = 0; i < NUM_GHOSTS; i++)
+					{
+						ghosts[i]->Draw(false);
+					}
+				}
+				else
+				{
+					player->DisplayHUD();
+					cout << "Game Over";
+					break;
+				}
+			}
+
 			player->DisplayHUD();
 			ResetCursor();
 		}

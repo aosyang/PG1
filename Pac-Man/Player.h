@@ -12,6 +12,13 @@ public:
 
 	void DisplayHUD();
 
+	void Reset(MazeType maze, COORD coord);
+
+	inline void Kill() { m_Lives--; }
+	inline COORD GetPos() { return m_Coord; }
+	inline int GetLives() { return m_Lives; }
+	inline bool GetPowerPellet() { return m_HasPowerPellet; }
+	inline void GhostKilled() { m_Score += 200; }
 private:
 	void Draw(MazeType maze);
 	void ClearSpot(MazeType maze);
@@ -20,4 +27,6 @@ private:
 	char*	m_Name;
 	int		m_Score;
 	int		m_Lives;
+	bool	m_HasPowerPellet;
+	int		m_PowerPelletFrames;
 };

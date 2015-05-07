@@ -12,13 +12,14 @@ Ghost::Ghost(ConsoleColor color, COORD start)
 {
 	m_Coord = start;
 	m_Color = color;
+	m_ScaredColor = White;
 	m_AvoidMove = -1;
 	m_InsideCage = (color != Red);
 
-	Draw();
+	Draw(false);
 }
 
-void Ghost::Move(MazeType maze, Ghost** ghosts)
+void Ghost::Move(MazeType maze, Ghost** ghosts, bool scared)
 {
 	int dir;
 	COORD newCoord;
@@ -99,18 +100,44 @@ void Ghost::Move(MazeType maze, Ghost** ghosts)
 
 			m_Coord = newCoord;
 
-			Draw();
+			Draw(scared);
 
 			break;
 		}
 	}
 }
 
-void Ghost::Draw()
+void Ghost::Draw(bool scared)
 {
 	Console::SetCursorPosition(m_Coord.X, m_Coord.Y);
-	Console::ForegroundColor(m_Color);
+
+	ConsoleColor color = m_Color;
+	if (scared)
+	{
+		color = m_ScaredColor;
+		m_ScaredColor = (m_ScaredColor == White) ? Blue : White;
+	}
+
+	Console::ForegroundColor(color);
 	cout << MGH;
+}
+
+void Ghost::Kill(MazeType maze)
+{
+	ClearSpot(maze);
+	m_Coord.X = 27; m_Coord.Y = 14;
+	Draw(false);
+
+	m_InsideCage = true;
+	m_AvoidMove = -1;
+}
+
+void Ghost::Reset(MazeType maze, COORD coord)
+{
+	m_AvoidMove = -1;
+	m_InsideCage = (m_Color != Red);
+	ClearSpot(maze);
+	m_Coord.X = coord.X; m_Coord.Y = coord.Y;
 }
 
 void Ghost::TryResetSpot(MazeType maze, Ghost** ghosts)
