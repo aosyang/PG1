@@ -252,6 +252,7 @@ int main()
 
 			COORD coord;
 			coord.X = coord.Y = 0;
+			bool validInput = true;
 
 			switch (letter)
 			{
@@ -267,48 +268,54 @@ int main()
 			case 'd':
 				coord.X = 2; coord.Y = 0;
 				break;
+			default:
+				validInput = false;
+				break;
 			}
 
-			player->Move(maze, coord);
-
-			bool playerKilled = CheckCollision(maze, player, ghosts);
-
-			if (!playerKilled)
+			if (validInput)
 			{
-				for (int i = 0; i < NUM_GHOSTS; i++)
+				player->Move(maze, coord);
+
+				bool playerKilled = CheckCollision(maze, player, ghosts);
+
+				if (!playerKilled)
 				{
-					ghosts[i]->Move(maze, ghosts, player->GetPowerPellet());
-				}
-
-				playerKilled = CheckCollision(maze, player, ghosts);
-			}
-
-			if (playerKilled)
-			{
-				if (player->GetLives() > 0)
-				{
-					player->Reset(maze, playerStart);
-
 					for (int i = 0; i < NUM_GHOSTS; i++)
 					{
-						ghosts[i]->Reset(maze, startPos[i]);
+						ghosts[i]->Move(maze, ghosts, player->GetPowerPellet());
 					}
 
-					for (int i = 0; i < NUM_GHOSTS; i++)
-					{
-						ghosts[i]->Draw(false);
-					}
+					playerKilled = CheckCollision(maze, player, ghosts);
 				}
-				else
+
+				if (playerKilled)
 				{
-					player->DisplayHUD();
-					cout << "Game Over";
-					break;
-				}
-			}
+					if (player->GetLives() > 0)
+					{
+						player->Reset(maze, playerStart);
 
-			player->DisplayHUD();
-			ResetCursor();
+						for (int i = 0; i < NUM_GHOSTS; i++)
+						{
+							ghosts[i]->Reset(maze, startPos[i]);
+						}
+
+						for (int i = 0; i < NUM_GHOSTS; i++)
+						{
+							ghosts[i]->Draw(false);
+						}
+					}
+					else
+					{
+						player->DisplayHUD();
+						cout << "Game Over";
+						break;
+					}
+				}
+
+				player->DisplayHUD();
+				ResetCursor();
+			}
 		}
 	}
 
