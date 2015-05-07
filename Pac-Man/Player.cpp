@@ -119,5 +119,6 @@ void Player::ClearSpot(MazeType maze)
 void Player::DisplayHUD()
 {
 	Console::SetCursorPosition(0, 31);
+	Console::ForegroundColor(Yellow);
 	cout << m_Name << " | Score: " << m_Score << " | Lives: " << m_Lives;
 }

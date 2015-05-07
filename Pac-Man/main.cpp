@@ -308,6 +308,7 @@ int main()
 					else
 					{
 						player->DisplayHUD();
+						Console::SetCursorPosition(23, 14);
 						cout << "Game Over";
 						break;
 					}
