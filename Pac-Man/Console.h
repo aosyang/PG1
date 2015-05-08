@@ -41,21 +41,21 @@ enum ConsoleColor
 enum ConsoleColor
 {
 	Black		= 0,
-	DarkBlue,
-	DarkGreen,
-	DarkCyan,
-	DarkRed,
-	DarkMagenta,
-	DarkYellow,
-	Gray,
-	DarkGray,
-	Blue,
-	Green,
-	Cyan,
-	Red,
-	Magenta,
-	Yellow,
-	White
+	DarkBlue	= 4,
+	DarkGreen	= 2,
+	DarkCyan	= 6,
+	DarkRed		= 1,
+	DarkMagenta	= 5,
+	DarkYellow	= 3,
+	Gray		= 7,
+	DarkGray	= 10,
+	Blue		= 14,
+	Green		= 12,
+	Cyan		= 16,
+	Red			= 11,
+	Magenta		= 15,
+	Yellow		= 13,
+	White		= 17
 };
 
 #endif

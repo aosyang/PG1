@@ -14,6 +14,10 @@ WORD Console::ForegroundColor()
 
 void Console::ForegroundColor(WORD attr)
 {
+	if (attr < 10)
+		cout << "\033[" << attr + 30 << "m";
+	else
+		cout << "\033[" << attr + 20 << ";1m";
 }
 
 WORD Console::BackgroundColor()
@@ -27,6 +31,7 @@ void Console::BackgroundColor(WORD attr)
 
 void Console::ResetColor()
 {
+	cout << "\033[0m";
 }
 
 int Console::WindowWidth()
