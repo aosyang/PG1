@@ -119,7 +119,11 @@ void Ghost::Draw(bool scared)
 	}
 
 	Console::ForegroundColor(color);
+#ifdef _WIN32
 	cout << MGH;
+#else
+	cout << "@";
+#endif
 }
 
 void Ghost::Kill(MazeType maze)

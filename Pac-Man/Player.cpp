@@ -6,6 +6,8 @@
 using namespace System;
 
 #include <iostream>
+#include <string.h>
+
 using std::cout;
 
 Player::Player(MazeType maze, COORD coord, char* name)

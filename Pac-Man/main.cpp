@@ -1,6 +1,10 @@
 #include <iostream>
 using namespace std;
+
+#ifdef _WIN32
 #include <conio.h>
+#endif
+
 #include <time.h>
 
 #include "Console.h"
@@ -43,6 +47,8 @@ bool CheckCollision(MazeType maze, Player* player, Ghost** ghosts)
 int main()
 {
 #pragma region Look Nice
+
+#ifdef _WIN32
 	// Get the handle of the console window.
 	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
 
@@ -88,13 +94,16 @@ int main()
 	MoveWindow(hwnd, (sw - w) >> 1, (sh - h) >> 1, w, h, TRUE);
 
 	SetConsoleTitle(L"Pac-Man"); // Unicode string!
+#endif
 #pragma endregion
 
 	// TODO Part 2: Memory Leak Detection
+#ifdef _WIN32
 	// use this to enable mem leak detection
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// use this function to break at a specific allocation
 	_CrtSetBreakAlloc(-1);
+#endif
 
 	// TODO Part 2: Seed random
 	// NOTE: Commenting-out the seeding of random can make it easier to test your code
@@ -153,8 +162,40 @@ int main()
 				Console::ForegroundColor(White);
 			else
 				Console::ForegroundColor(Blue);
+				
+#ifdef _WIN32
 			cout << maze[i][j];
+#else
+			switch (maze[i][j])
+			{
+			case MTL:
+				cout << "\u250C";
+				break;
+			case MTR:
+				cout << "\u2510";
+				break;
+			case MBL:
+				cout << "\u2514";
+				break;
+			case MBR:
+				cout << "\u2518";
+				break;
+			case MUD:
+				cout << "\u2502";
+				break;
+			case MLR:
+				cout << "\u2500";
+				break;
+			default:
+				cout << maze[i][j];
+				break;
+			}
+#endif
 		}
+		
+#ifndef _WIN32
+		cout << endl;
+#endif
 	}
 
 #pragma region Example Code
@@ -242,7 +283,12 @@ int main()
 	//	TODO Part 1: Display HUD and reset cursor
 	while (true)
 	{
+#ifdef _WIN32
 		char letter = _getch();
+#else
+		char letter;
+		cin >> letter;
+#endif
 		if (cin.good())
 		{
 			if ('e' == letter)

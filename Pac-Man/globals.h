@@ -1,7 +1,17 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include <windows.h>
+#ifdef _WIN32
+	#include <windows.h>
+#else
+
+	#include <cstdlib>
+
+	struct COORD
+	{
+		int X, Y;
+	};
+#endif
 
 // Helper function to create a coord and assign values to x and y (otherwise they would be garbage).
 inline COORD CreateCoord(short x, short y)

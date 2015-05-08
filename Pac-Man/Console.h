@@ -1,11 +1,21 @@
 #pragma once
 
-#include <windows.h>
+#ifdef _WIN32
+
+	#include <windows.h>
+
+#else
+
+	typedef unsigned int WORD;
+
+#endif
 
 namespace System
 {
 
 // Colors - can be used as Foreground or Background
+#ifdef _WIN32
+
 enum ConsoleColor
 {
 	Black		= 0,
@@ -26,13 +36,39 @@ enum ConsoleColor
 	White		= FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY,
 };
 
+#else
+
+enum ConsoleColor
+{
+	Black		= 0,
+	DarkBlue,
+	DarkGreen,
+	DarkCyan,
+	DarkRed,
+	DarkMagenta,
+	DarkYellow,
+	Gray,
+	DarkGray,
+	Blue,
+	Green,
+	Cyan,
+	Red,
+	Magenta,
+	Yellow,
+	White
+};
+
+#endif
+
 class Console
 {
 private:
 	// Data members
+#ifdef _WIN32
 	static HANDLE out;
-	static WORD defColors;
 	static HWND hwnd;
+#endif
+	static WORD defColors;
 
 public:
 	// Get the current foreground color
