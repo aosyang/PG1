@@ -2,13 +2,15 @@
 
 #include "globals.h"
 
+class Fruit;
+
 class Player
 {
 public:
 	Player(MazeType maze, COORD coord, char* name);
 	~Player();
 
-	void Move(MazeType maze, COORD coord);
+	void Move(MazeType maze, COORD coord, Fruit* fruit);
 
 	void DisplayHUD();
 

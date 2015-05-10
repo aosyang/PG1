@@ -59,6 +59,9 @@ typedef char MazeType[MAZE_ROWS][MAZE_COLS];
 // MazeDot
 #define MDOT 'o'
 
+// MazeFruit
+#define MFR '*'
+
 // MazeGhost
 #define MGH (char)1
 

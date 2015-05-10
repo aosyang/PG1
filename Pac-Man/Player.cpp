@@ -1,6 +1,7 @@
 // TODO Part 1: Method Definitions for Player
 
 #include "Player.h"
+#include "Fruit.h"
 
 #include "Console.h"
 using namespace System;
@@ -27,10 +28,10 @@ Player::Player(MazeType maze, COORD coord, char* name)
 
 Player::~Player()
 {
-	delete m_Name;
+	delete [] m_Name;
 }
 
-void Player::Move(MazeType maze, COORD coord)
+void Player::Move(MazeType maze, COORD coord, Fruit* fruit)
 {
 	COORD newCoord;
 
@@ -72,6 +73,12 @@ void Player::Move(MazeType maze, COORD coord)
 		break;
 	default:
 		break;
+	}
+
+	if (CoordsEqual(newCoord, fruit->GetPos()))
+	{
+		fruit->Kill();
+		m_Score += 100;
 	}
 
 	if (m_HasPowerPellet)

@@ -10,6 +10,7 @@ using namespace System;
 
 #include "Player.h"
 #include "Ghost.h"
+#include "Fruit.h"
 
 // Reset the console's cursor to bottom of screen.
 void ResetCursor()
@@ -227,6 +228,8 @@ int main()
 		ghosts[i] = new Ghost(startColor[i], startPos[i]);
 	}
 
+	Fruit* fruit = new Fruit(maze);
+
 	// TODO Part 1: Display HUD and reset cursor
 	player->DisplayHUD();
 	ResetCursor();
@@ -290,13 +293,15 @@ int main()
 
 			//if (validInput)
 			{
-				player->Move(maze, coord);
+				player->Move(maze, coord, fruit);
 			}
 
 			bool playerKilled = CheckCollision(maze, player, ghosts);
 
 			if (!playerKilled)
 			{
+				fruit->Draw(maze);
+
 				for (int i = 0; i < NUM_GHOSTS; i++)
 				{
 					ghosts[i]->Move(maze, ghosts, player, player->GetPowerPellet());
@@ -342,6 +347,7 @@ int main()
 	{
 		delete ghosts[i];
 	}
+	delete fruit;
 
 	Console::ResetColor();
 	ResetCursor();

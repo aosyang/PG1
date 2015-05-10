@@ -77,12 +77,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Fruit.cpp" />
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
+    <ClInclude Include="Fruit.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="Player.h" />
