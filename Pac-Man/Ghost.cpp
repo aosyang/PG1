@@ -28,6 +28,13 @@ void Ghost::Move(MazeType maze, Ghost** ghosts, Player* player, bool scared)
 	relCoord.X = player->GetPos().X - m_Coord.X;
 	relCoord.Y = player->GetPos().Y - m_Coord.Y;
 
+	// When scared, move away from player
+	if (scared)
+	{
+		relCoord.X = -relCoord.X;
+		relCoord.Y = -relCoord.Y;
+	}
+
 	// When scared, ghost moves once two frames
 	if (scared && m_ScaredColor == White)
 	{
