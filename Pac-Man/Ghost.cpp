@@ -24,8 +24,17 @@ void Ghost::Move(MazeType maze, Ghost** ghosts, bool scared)
 	int dir;
 	COORD newCoord;
 
+	// When scared, ghost moves once two frames
+	if (scared && m_ScaredColor == White)
+	{
+		Draw(scared);
+		return;
+	}
+
 	while (true)
 	{
+		// Generate random direction for moving. When ghost in cage,
+		// give 5 out of 8 chance for moving up.
 		int all_dir = m_InsideCage ? 8 : 4;
 		dir = rand() % all_dir;
 		while (dir == m_AvoidMove || (m_AvoidMove == 0 && dir > 3))
@@ -92,6 +101,7 @@ void Ghost::Move(MazeType maze, Ghost** ghosts, bool scared)
 
 		if (validMove)
 		{
+			// Avoid moving in the opposite of current direction
 			m_AvoidMove = (dir < 4) ? dir : 0;
 			m_AvoidMove += 2;
 			m_AvoidMove %= 4;

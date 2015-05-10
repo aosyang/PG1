@@ -98,7 +98,7 @@ int main()
 
 	// TODO Part 2: Seed random
 	// NOTE: Commenting-out the seeding of random can make it easier to test your code
-	srand(time(NULL));
+	srand(static_cast<unsigned int>(time(NULL)));
 
 	// TODO Part 1: Name entry
 	char playerName[1024];
@@ -242,8 +242,23 @@ int main()
 	//	TODO Part 1: Display HUD and reset cursor
 	while (true)
 	{
-		char letter = _getch();
-		if (cin.good())
+		Sleep(150);
+
+		//char letter = _getch();
+		//if (cin.good())
+
+		char letter = ' ';
+		if (GetAsyncKeyState('A'))
+			letter = 'a';
+		else if (GetAsyncKeyState('D'))
+			letter = 'd';
+		else if (GetAsyncKeyState('W'))
+			letter = 'w';
+		else if (GetAsyncKeyState('S'))
+			letter = 's';
+		else if (GetAsyncKeyState('E'))
+			letter = 'e';
+
 		{
 			if ('e' == letter)
 			{
@@ -273,50 +288,50 @@ int main()
 				break;
 			}
 
-			if (validInput)
+			//if (validInput)
 			{
 				player->Move(maze, coord);
+			}
 
-				bool playerKilled = CheckCollision(maze, player, ghosts);
+			bool playerKilled = CheckCollision(maze, player, ghosts);
 
-				if (!playerKilled)
+			if (!playerKilled)
+			{
+				for (int i = 0; i < NUM_GHOSTS; i++)
 				{
+					ghosts[i]->Move(maze, ghosts, player->GetPowerPellet());
+				}
+
+				playerKilled = CheckCollision(maze, player, ghosts);
+			}
+
+			if (playerKilled)
+			{
+				if (player->GetLives() > 0)
+				{
+					player->Reset(maze, playerStart);
+
 					for (int i = 0; i < NUM_GHOSTS; i++)
 					{
-						ghosts[i]->Move(maze, ghosts, player->GetPowerPellet());
+						ghosts[i]->Reset(maze, startPos[i]);
 					}
 
-					playerKilled = CheckCollision(maze, player, ghosts);
+					for (int i = 0; i < NUM_GHOSTS; i++)
+					{
+						ghosts[i]->Draw(false);
+					}
 				}
-
-				if (playerKilled)
+				else
 				{
-					if (player->GetLives() > 0)
-					{
-						player->Reset(maze, playerStart);
-
-						for (int i = 0; i < NUM_GHOSTS; i++)
-						{
-							ghosts[i]->Reset(maze, startPos[i]);
-						}
-
-						for (int i = 0; i < NUM_GHOSTS; i++)
-						{
-							ghosts[i]->Draw(false);
-						}
-					}
-					else
-					{
-						player->DisplayHUD();
-						Console::SetCursorPosition(23, 14);
-						cout << "Game Over";
-						break;
-					}
+					player->DisplayHUD();
+					Console::SetCursorPosition(23, 14);
+					cout << "Game Over";
+					break;
 				}
-
-				player->DisplayHUD();
-				ResetCursor();
 			}
+
+			player->DisplayHUD();
+			ResetCursor();
 		}
 	}
 
