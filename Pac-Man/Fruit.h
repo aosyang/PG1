@@ -10,7 +10,7 @@ public:
 
 	inline bool IsShown() { return m_Show; }
 	inline COORD GetPos() { return m_Coord;  }
-	inline void Kill() { m_TimeCountdown = 0; }
+	inline void Kill() { if (m_Show) m_TimeCountdown = 0; }
 
 private:
 	void ClearSpot(MazeType maze);

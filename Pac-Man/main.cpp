@@ -143,6 +143,8 @@ int main()
 		{ MBL, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MLR, MBR, },
 	};
 
+	int dotCount = 0;
+
 	// Draw the maze.
 	for (int i = 0; i < MAZE_ROWS; i++)
 	{
@@ -155,6 +157,9 @@ int main()
 			else
 				Console::ForegroundColor(Blue);
 			cout << maze[i][j];
+
+			if (MDOT == maze[i][j])
+				dotCount++;
 		}
 	}
 
@@ -217,7 +222,7 @@ int main()
 
 	// TODO Part 1: Create player
 	COORD playerStart = CreateCoord(27, 23);
-	Player* player = new Player(maze, playerStart, playerName);
+	Player* player = new Player(maze, playerStart, playerName, dotCount);
 
 	// TODO Part 2: Create ghosts
 	COORD startPos[NUM_GHOSTS] = { { 27, 11 }, { 23, 14 }, { 27, 14 }, { 31, 14 } };
@@ -297,9 +302,18 @@ int main()
 			}
 
 			bool playerKilled = CheckCollision(maze, player, ghosts);
+			bool playerWins = (player->GetDotCount() == 0);
 
 			if (!playerKilled)
 			{
+				if (playerWins)
+				{
+					player->DisplayHUD();
+					Console::SetCursorPosition(20, 14);
+					cout << "Level Complete!";
+					break;
+				}
+
 				fruit->Draw(maze);
 
 				for (int i = 0; i < NUM_GHOSTS; i++)

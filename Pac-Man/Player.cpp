@@ -9,7 +9,7 @@ using namespace System;
 #include <iostream>
 using std::cout;
 
-Player::Player(MazeType maze, COORD coord, char* name)
+Player::Player(MazeType maze, COORD coord, char* name, int dotCount)
 {
 	m_Coord = coord;
 
@@ -19,6 +19,8 @@ Player::Player(MazeType maze, COORD coord, char* name)
 
 	m_Score = 0;
 	m_Lives = 3;
+
+	m_DotCount = dotCount;
 
 	m_HasPowerPellet = false;
 	m_PowerPelletFrames = 0;
@@ -70,6 +72,7 @@ void Player::Move(MazeType maze, COORD coord, Fruit* fruit)
 		break;
 	case MDOT:
 		m_Score += 10;
+		m_DotCount--;
 		break;
 	default:
 		break;
