@@ -12,6 +12,8 @@ using namespace System;
 #include "Ghost.h"
 #include "Fruit.h"
 
+#pragma comment (lib, "Winmm.lib")
+
 // Reset the console's cursor to bottom of screen.
 void ResetCursor()
 {
@@ -29,10 +31,12 @@ bool CheckCollision(MazeType maze, Player* player, Ghost** ghosts)
 			{
 				ghosts[i]->Kill(maze);
 				player->GhostKilled();
+				PlaySound(TEXT("pacman_eatghost.wav"), NULL, SND_FILENAME | SND_ASYNC);
 			}
 			else
 			{
 				player->Kill();
+				PlaySound(TEXT("pacman_death.wav"), NULL, SND_FILENAME | SND_ASYNC);
 				return true;
 			}
 		}
@@ -101,9 +105,20 @@ int main()
 	// NOTE: Commenting-out the seeding of random can make it easier to test your code
 	srand(static_cast<unsigned int>(time(NULL)));
 
+	PlaySound(TEXT("pacman_beginning.wav"), NULL, SND_FILENAME | SND_ASYNC);
+
+	cout << "     _____        _____      __  __          _   _ " << endl;
+	cout << "    |  __ \\ /\\   / ____|    |  \\/  |   /\\   | \\ | |" << endl;
+	cout << "    | |__) /  \\ | |   ______| \\  / |  /  \\  |  \\| |" << endl;
+	cout << "    |  ___/ /\\ \\| |  |______| |\\/| | / /\\ \\ | . ` |" << endl;
+	cout << "    | |  / ____ \\ |____     | |  | |/ ____ \\| |\\  |" << endl;
+	cout << "    |_| /_/    \\_\\_____|    |_|  |_/_/    \\_\\_| \\_|" << endl;
+                                                
+                                                
+
 	// TODO Part 1: Name entry
 	char playerName[1024];
-	cout << "Please enter your name: ";
+	cout << endl << endl << "\tPlease enter your name: ";
 	cin.getline(playerName, sizeof(playerName));
 	Console::SetCursorPosition(0, 0);
 
@@ -311,6 +326,8 @@ int main()
 					player->DisplayHUD();
 					Console::SetCursorPosition(20, 14);
 					cout << "Level Complete!";
+					PlaySound(TEXT("pacman_intermission.wav"), NULL, SND_FILENAME | SND_ASYNC);
+					Sleep(2000);
 					break;
 				}
 

@@ -78,10 +78,11 @@ void Player::Move(MazeType maze, COORD coord, Fruit* fruit)
 		break;
 	}
 
-	if (CoordsEqual(newCoord, fruit->GetPos()))
+	if (CoordsEqual(newCoord, fruit->GetPos()) && fruit->IsShown())
 	{
 		fruit->Kill();
 		m_Score += 100;
+		PlaySound(TEXT("pacman_eatfruit.wav"), NULL, SND_FILENAME | SND_ASYNC);
 	}
 
 	if (m_HasPowerPellet)
