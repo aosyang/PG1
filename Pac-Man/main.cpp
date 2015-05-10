@@ -299,7 +299,7 @@ int main()
 			{
 				for (int i = 0; i < NUM_GHOSTS; i++)
 				{
-					ghosts[i]->Move(maze, ghosts, player->GetPowerPellet());
+					ghosts[i]->Move(maze, ghosts, player, player->GetPowerPellet());
 				}
 
 				playerKilled = CheckCollision(maze, player, ghosts);

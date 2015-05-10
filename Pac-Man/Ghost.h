@@ -5,12 +5,14 @@
 #include "Console.h"
 using namespace System;
 
+class Player;
+
 class Ghost
 {
 public:
 	Ghost(ConsoleColor color, COORD start);
 
-	void Move(MazeType maze, Ghost** ghosts, bool scared);
+	void Move(MazeType maze, Ghost** ghosts, Player* player, bool scared);
 	void Draw(bool scared);
 
 	void Kill(MazeType maze);
