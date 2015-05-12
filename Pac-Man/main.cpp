@@ -328,7 +328,8 @@ int main()
 					Console::SetCursorPosition(20, 14);
 					cout << "Level Complete!";
 					AudioSystem::GetInstance()->Play(GAME_SOUND_INTERMISSION);
-					Sleep(2000);
+					while (AudioSystem::GetInstance()->IsPlaying(GAME_SOUND_INTERMISSION))
+						Sleep(500);
 					break;
 				}
 

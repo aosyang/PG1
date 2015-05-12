@@ -73,3 +73,16 @@ void AudioSystem::Play(GameSound sound_name)
 			fmod_system->playSound(sounds[sound_name], 0, false, &channel);
 	}
 }
+
+bool AudioSystem::IsPlaying(GameSound sound_name)
+{
+	if (!sounds[sound_name])
+		return false;
+
+	bool playing;
+	FMOD::Sound* sound;
+	channel->isPlaying(&playing);
+	channel->getCurrentSound(&sound);
+
+	return playing && sound == sounds[sound_name];
+}

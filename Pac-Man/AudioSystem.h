@@ -28,6 +28,7 @@ public:
 	void Destroy();
 
 	void Play(GameSound sound_name);
+	bool IsPlaying(GameSound sound_name);
 
 private:
 	AudioSystem();
