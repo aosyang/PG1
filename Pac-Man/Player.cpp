@@ -3,6 +3,8 @@
 #include "Player.h"
 #include "Fruit.h"
 
+#include "AudioSystem.h"
+
 #include "Console.h"
 using namespace System;
 
@@ -73,6 +75,7 @@ void Player::Move(MazeType maze, COORD coord, Fruit* fruit)
 	case MDOT:
 		m_Score += 10;
 		m_DotCount--;
+		AudioSystem::GetInstance()->Play(GAME_SOUND_COININ);
 		break;
 	default:
 		break;
@@ -82,7 +85,7 @@ void Player::Move(MazeType maze, COORD coord, Fruit* fruit)
 	{
 		fruit->Kill();
 		m_Score += 100;
-		PlaySound(TEXT("pacman_eatfruit.wav"), NULL, SND_FILENAME | SND_ASYNC);
+		AudioSystem::GetInstance()->Play(GAME_SOUND_EATFRUIT);
 	}
 
 	if (m_HasPowerPellet)

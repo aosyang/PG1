@@ -3,6 +3,8 @@ using namespace std;
 #include <conio.h>
 #include <time.h>
 
+#include "AudioSystem.h"
+
 #include "Console.h"
 using namespace System;
 
@@ -11,8 +13,6 @@ using namespace System;
 #include "Player.h"
 #include "Ghost.h"
 #include "Fruit.h"
-
-#pragma comment (lib, "Winmm.lib")
 
 // Reset the console's cursor to bottom of screen.
 void ResetCursor()
@@ -31,12 +31,12 @@ bool CheckCollision(MazeType maze, Player* player, Ghost** ghosts)
 			{
 				ghosts[i]->Kill(maze);
 				player->GhostKilled();
-				PlaySound(TEXT("pacman_eatghost.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				AudioSystem::GetInstance()->Play(GAME_SOUND_EATGHOST);
 			}
 			else
 			{
 				player->Kill();
-				PlaySound(TEXT("pacman_death.wav"), NULL, SND_FILENAME | SND_ASYNC);
+				AudioSystem::GetInstance()->Play(GAME_SOUND_DEATH);
 				return true;
 			}
 		}
@@ -95,6 +95,9 @@ int main()
 	SetConsoleTitle(L"Pac-Man"); // Unicode string!
 #pragma endregion
 
+	AudioSystem::GetInstance()->Init();
+	AudioSystem::GetInstance()->Play(GAME_SOUND_BEGINNING);
+
 	// TODO Part 2: Memory Leak Detection
 	// use this to enable mem leak detection
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
@@ -104,8 +107,6 @@ int main()
 	// TODO Part 2: Seed random
 	// NOTE: Commenting-out the seeding of random can make it easier to test your code
 	srand(static_cast<unsigned int>(time(NULL)));
-
-	PlaySound(TEXT("pacman_beginning.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
 	cout << "     _____        _____      __  __          _   _ " << endl;
 	cout << "    |  __ \\ /\\   / ____|    |  \\/  |   /\\   | \\ | |" << endl;
@@ -326,7 +327,7 @@ int main()
 					player->DisplayHUD();
 					Console::SetCursorPosition(20, 14);
 					cout << "Level Complete!";
-					PlaySound(TEXT("pacman_intermission.wav"), NULL, SND_FILENAME | SND_ASYNC);
+					AudioSystem::GetInstance()->Play(GAME_SOUND_INTERMISSION);
 					Sleep(2000);
 					break;
 				}
@@ -379,6 +380,7 @@ int main()
 		delete ghosts[i];
 	}
 	delete fruit;
+	AudioSystem::GetInstance()->Destroy();
 
 	Console::ResetColor();
 	ResetCursor();

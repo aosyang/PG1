@@ -30,6 +30,9 @@
     <ClCompile Include="Fruit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AudioSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h">
@@ -47,5 +50,11 @@
     <ClInclude Include="Fruit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AudioSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="fmod_vc.lib" />
   </ItemGroup>
 </Project>
