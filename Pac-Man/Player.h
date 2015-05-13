@@ -23,6 +23,7 @@ public:
 	inline void GhostKilled() { m_Score += 200; }
 	inline int GetDotCount() { return m_DotCount; }
 private:
+	bool TryMoving(MazeType maze, COORD& coord);
 	void Draw(MazeType maze);
 	void ClearSpot(MazeType maze);
 
@@ -33,4 +34,5 @@ private:
 	int		m_DotCount;
 	bool	m_HasPowerPellet;
 	int		m_PowerPelletFrames;
+	int		m_MovingDir;
 };
