@@ -122,6 +122,8 @@ int main()
 	cout << endl << endl << "\tPlease enter your name: ";
 	cin.getline(playerName, sizeof(playerName));
 	Console::SetCursorPosition(0, 0);
+	//FlushConsoleInputBuffer(GetStdHandle(STD_INPUT_HANDLE));
+	//cin.ignore(LLONG_MAX, '\n');
 
 	char maze[MAZE_ROWS][MAZE_COLS] =
 	{
@@ -268,109 +270,103 @@ int main()
 	{
 		Sleep(150);
 
-		//char letter = _getch();
-		//if (cin.good())
+		bool right = GetAsyncKeyState('D') & 0x8000;
+		bool left  = GetAsyncKeyState('A') & 0x8000;
+		bool up    = GetAsyncKeyState('W') & 0x8000;
+		bool down  = GetAsyncKeyState('S') & 0x8000;
+		bool quit  = GetAsyncKeyState('E') & 0x8000;
 
 		char letter = ' ';
-		if (GetAsyncKeyState('A'))
+		if (left)
 			letter = 'a';
-		else if (GetAsyncKeyState('D'))
+		else if (right)
 			letter = 'd';
-		else if (GetAsyncKeyState('W'))
+		else if (up)
 			letter = 'w';
-		else if (GetAsyncKeyState('S'))
+		else if (down)
 			letter = 's';
-		else if (GetAsyncKeyState('E'))
-			letter = 'e';
 
+		if (quit)
 		{
-			if ('e' == letter)
+			break;
+		}
+
+		COORD coord;
+		coord.X = coord.Y = 0;
+
+		switch (letter)
+		{
+		case 'w':
+			coord.X = 0; coord.Y = -1;
+			break;
+		case 's':
+			coord.X = 0; coord.Y = 1;
+			break;
+		case 'a':
+			coord.X = -2; coord.Y = 0;
+			break;
+		case 'd':
+			coord.X = 2; coord.Y = 0;
+			break;
+		default:
+			break;
+		}
+
+		player->Move(maze, coord, fruit);
+
+		bool playerKilled = CheckCollision(maze, player, ghosts);
+		bool playerWins = (player->GetDotCount() == 0);
+
+		if (!playerKilled)
+		{
+			if (playerWins)
 			{
+				player->DisplayHUD();
+				Console::SetCursorPosition(20, 14);
+				cout << "Level Complete!";
+				AudioSystem::GetInstance()->Play(GAME_SOUND_INTERMISSION);
+				while (AudioSystem::GetInstance()->IsPlaying(GAME_SOUND_INTERMISSION))
+					Sleep(500);
 				break;
 			}
 
-			COORD coord;
-			coord.X = coord.Y = 0;
-			bool validInput = true;
+			fruit->Draw(maze);
 
-			switch (letter)
+			for (int i = 0; i < NUM_GHOSTS; i++)
 			{
-			case 'w':
-				coord.X = 0; coord.Y = -1;
-				break;
-			case 's':
-				coord.X = 0; coord.Y = 1;
-				break;
-			case 'a':
-				coord.X = -2; coord.Y = 0;
-				break;
-			case 'd':
-				coord.X = 2; coord.Y = 0;
-				break;
-			default:
-				validInput = false;
-				break;
+				ghosts[i]->Move(maze, ghosts, player, player->GetPowerPellet());
 			}
 
-			//if (validInput)
+			playerKilled = CheckCollision(maze, player, ghosts);
+		}
+
+		if (playerKilled)
+		{
+			if (player->GetLives() > 0)
 			{
-				player->Move(maze, coord, fruit);
-			}
-
-			bool playerKilled = CheckCollision(maze, player, ghosts);
-			bool playerWins = (player->GetDotCount() == 0);
-
-			if (!playerKilled)
-			{
-				if (playerWins)
-				{
-					player->DisplayHUD();
-					Console::SetCursorPosition(20, 14);
-					cout << "Level Complete!";
-					AudioSystem::GetInstance()->Play(GAME_SOUND_INTERMISSION);
-					while (AudioSystem::GetInstance()->IsPlaying(GAME_SOUND_INTERMISSION))
-						Sleep(500);
-					break;
-				}
-
-				fruit->Draw(maze);
+				player->Reset(maze, playerStart);
 
 				for (int i = 0; i < NUM_GHOSTS; i++)
 				{
-					ghosts[i]->Move(maze, ghosts, player, player->GetPowerPellet());
+					ghosts[i]->Reset(maze, startPos[i]);
 				}
 
-				playerKilled = CheckCollision(maze, player, ghosts);
+				for (int i = 0; i < NUM_GHOSTS; i++)
+				{
+					ghosts[i]->Draw(false);
+				}
 			}
-
-			if (playerKilled)
+			else
 			{
-				if (player->GetLives() > 0)
-				{
-					player->Reset(maze, playerStart);
-
-					for (int i = 0; i < NUM_GHOSTS; i++)
-					{
-						ghosts[i]->Reset(maze, startPos[i]);
-					}
-
-					for (int i = 0; i < NUM_GHOSTS; i++)
-					{
-						ghosts[i]->Draw(false);
-					}
-				}
-				else
-				{
-					player->DisplayHUD();
-					Console::SetCursorPosition(23, 14);
-					cout << "Game Over";
-					break;
-				}
+				player->DisplayHUD();
+				Console::SetCursorPosition(23, 14);
+				cout << "Game Over";
+				break;
 			}
-
-			player->DisplayHUD();
-			ResetCursor();
 		}
+
+		player->DisplayHUD();
+		ResetCursor();
 	}
 
 	// After game loop:
