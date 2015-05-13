@@ -37,6 +37,8 @@ bool CheckCollision(MazeType maze, Player* player, Ghost** ghosts)
 			{
 				player->Kill();
 				AudioSystem::GetInstance()->Play(GAME_SOUND_DEATH);
+				while (AudioSystem::GetInstance()->IsPlaying(GAME_SOUND_DEATH))
+					Sleep(500);
 				return true;
 			}
 		}
@@ -270,23 +272,17 @@ int main()
 	{
 		Sleep(150);
 
-		bool right = GetAsyncKeyState('D') & 0x8000;
-		bool left  = GetAsyncKeyState('A') & 0x8000;
-		bool up    = GetAsyncKeyState('W') & 0x8000;
-		bool down  = GetAsyncKeyState('S') & 0x8000;
-		bool quit  = GetAsyncKeyState('E') & 0x8000;
-
 		char letter = ' ';
-		if (left)
+		if (GetAsyncKeyState('A') & 0x8000)
 			letter = 'a';
-		else if (right)
+		else if (GetAsyncKeyState('D') & 0x8000)
 			letter = 'd';
-		else if (up)
+		else if (GetAsyncKeyState('W') & 0x8000)
 			letter = 'w';
-		else if (down)
+		else if (GetAsyncKeyState('S') & 0x8000)
 			letter = 's';
 
-		if (quit)
+		if (GetAsyncKeyState('E') & 0x8000)
 		{
 			break;
 		}
